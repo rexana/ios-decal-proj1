@@ -23,15 +23,22 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="hangman1" translatesAutoresizingMaskIntoConstraints="NO" id="OD3-UB-IgZ">
+                            <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="hangman1" translatesAutoresizingMaskIntoConstraints="NO" id="OD3-UB-IgZ" userLabel="hangmanImage">
                                 <rect key="frame" x="88" y="70" width="200" height="200"/>
+                                <accessibility key="accessibilityConfiguration">
+                                    <accessibilityTraits key="traits" image="YES" notEnabled="YES"/>
+                                </accessibility>
                             </imageView>
                             <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zxd-Rz-o8X">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <items>
                                     <navigationItem title="Hangman" id="d5d-YM-N45">
-                                        <barButtonItem key="leftBarButtonItem" title="Exit" id="Cqh-Gc-CVR"/>
+                                        <barButtonItem key="leftBarButtonItem" title="New Game" id="fcE-Dl-zpE">
+                                            <connections>
+                                                <action selector="newGameButtonWasPressed:" destination="33m-bG-32Y" id="ssj-52-Pcg"/>
+                                            </connections>
+                                        </barButtonItem>
                                     </navigationItem>
                                 </items>
                             </navigationBar>
@@ -321,8 +328,8 @@
                                     <constraint firstAttribute="height" constant="7" id="F58-kf-iXI"/>
                                 </constraints>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="_" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="D8h-kv-AW0">
-                                <rect key="frame" x="88" y="314" width="200" height="20.5"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="_" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="D8h-kv-AW0">
+                                <rect key="frame" x="28" y="314" width="319" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -360,7 +367,7 @@
                             <constraint firstItem="Cgx-iV-c34" firstAttribute="height" secondItem="D4c-xt-AdM" secondAttribute="height" id="Be2-Ws-NGn"/>
                             <constraint firstItem="fvm-wN-sXY" firstAttribute="top" secondItem="D4c-xt-AdM" secondAttribute="bottom" constant="16" id="CiY-17-go4"/>
                             <constraint firstItem="Cgx-iV-c34" firstAttribute="top" secondItem="XsM-Ef-bCl" secondAttribute="bottom" constant="24" id="DDy-BC-Sho"/>
-                            <constraint firstItem="D8h-kv-AW0" firstAttribute="leading" secondItem="xKS-yl-l6T" secondAttribute="leadingMargin" constant="72" id="Don-EA-OBA"/>
+                            <constraint firstItem="D8h-kv-AW0" firstAttribute="leading" secondItem="xKS-yl-l6T" secondAttribute="leadingMargin" constant="12" id="Don-EA-OBA"/>
                             <constraint firstItem="jUR-co-Y7e" firstAttribute="leading" secondItem="oEf-go-yMi" secondAttribute="trailing" constant="8" id="Dsb-OP-Yty"/>
                             <constraint firstItem="YLT-5f-8ed" firstAttribute="centerY" secondItem="oR3-TI-Bmk" secondAttribute="centerY" id="E8g-ec-dYH"/>
                             <constraint firstItem="hhW-8j-Kkt" firstAttribute="height" secondItem="fvm-wN-sXY" secondAttribute="height" id="EIB-cq-NNw"/>
@@ -382,7 +389,7 @@
                             <constraint firstItem="oKo-RS-AOc" firstAttribute="top" secondItem="ETo-0Z-6M7" secondAttribute="bottom" constant="16" id="LG1-YX-DZA"/>
                             <constraint firstItem="LlI-D9-seg" firstAttribute="height" secondItem="oR3-TI-Bmk" secondAttribute="height" id="MVf-47-WR4"/>
                             <constraint firstItem="9Rt-dM-Imq" firstAttribute="leading" secondItem="noS-DL-qr6" secondAttribute="trailing" constant="8" id="NdN-ct-bzS"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="D8h-kv-AW0" secondAttribute="trailing" constant="71" id="PIr-SV-kb6"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="D8h-kv-AW0" secondAttribute="trailing" constant="12" id="PIr-SV-kb6"/>
                             <constraint firstItem="J6l-BQ-Fy4" firstAttribute="width" secondItem="D4c-xt-AdM" secondAttribute="width" id="PjG-CX-Ret"/>
                             <constraint firstItem="9Rt-dM-Imq" firstAttribute="top" secondItem="hhW-8j-Kkt" secondAttribute="bottom" constant="16" id="Q7c-P6-BaV"/>
                             <constraint firstItem="yaN-Z9-Uc0" firstAttribute="centerX" secondItem="xKS-yl-l6T" secondAttribute="centerX" id="QYO-Zm-Khk"/>
@@ -467,8 +474,8 @@
                     </view>
                     <connections>
                         <outlet property="BlanksLabel" destination="D8h-kv-AW0" id="K6y-QO-TaB"/>
-                        <outlet property="Image" destination="OD3-UB-IgZ" id="ObJ-WQ-nuW"/>
                         <outlet property="IncorrectGuessesLabel" destination="rul-M4-1oE" id="pEy-By-V9r"/>
+                        <outlet property="hangmanImage" destination="OD3-UB-IgZ" id="Svl-Pd-E7Y"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GJo-zA-LYW" userLabel="First Responder" sceneMemberID="firstResponder"/>

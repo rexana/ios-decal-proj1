@@ -10,13 +10,17 @@ import UIKit
 
 class HangmanViewController: UIViewController {
 
-    @IBOutlet weak var image: UIImageView!
+
+    @IBOutlet weak var hangmanImage: UIImageView!
     @IBOutlet weak var blanksLabel: UILabel!
     @IBOutlet weak var incorrectGuessesLabel: UILabel!
     
     var letter = ""
     var phrase = ""
     var phraseLength = 0
+    var numIncorrectGuesses = 0
+    let maxIncorrectGuesses = 6
+    var guessesSoFar = Set<String>()
     var displayString = ""
     
     override func viewDidLoad() {
@@ -28,16 +32,32 @@ class HangmanViewController: UIViewController {
         phraseLength = phrase.characters.count
         print(phrase)
         
-        displayInitialDashes()
+        resetGameValues()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
     
+    func resetGameValues() {
+        letter = ""
+        numIncorrectGuesses = 0
+        guessesSoFar = Set<String>()
+        displayString = ""
+        incorrectGuessesLabel.text? = "Incorrect Guesses: "
+        hangmanImage.image = UIImage(named: "hangman1")
+        
+        displayInitialDashes()
+    }
+    
     func displayInitialDashes() {
-        for _ in 0..<phraseLength {
-            displayString += "-"
+        for pos in 0..<phraseLength {
+            if Array(phrase.characters)[pos] == " " {
+                displayString += " "
+            } else {
+                displayString += "-"
+            }
+            
         }
         updateDisplayString()
     }
@@ -47,17 +67,48 @@ class HangmanViewController: UIViewController {
     }
     
     func addCorrectLetter() {
-        let range: Range<String.Index> = phrase.range(of: letter)!
-        let indexOfLetter: Int = phrase.distance(from: phrase.startIndex, to: range.lowerBound)
-
-        var chars = Array(phrase.characters)  // gets an array of characters
-        chars[indexOfLetter] = Character(letter)
+        var indices = [Int]()
+        for pos in 0..<phraseLength {
+            if Array(phrase.characters)[pos] == Character(letter) {
+                indices += [pos]
+            }
+        }
+        
+        var chars = Array(displayString.characters)
+        for index in indices {
+            chars[index] = Character(letter)
+        }
         displayString = String(chars)
-
     }
     
     func addIncorrectLetter() {
         incorrectGuessesLabel.text? += " " + letter
+    }
+    
+    func updateImage() {
+        let imageName = "hangman" + String(numIncorrectGuesses + 1)
+        hangmanImage.image = UIImage(named: imageName)
+    }
+    
+    func allCorrectLettersGuessed() -> Bool {
+        return displayString.lowercased() == phrase.lowercased()
+    }
+    
+    func youWinAlert() {
+        let alertController = UIAlertController(title: "You win!", message: "Congratulations!", preferredStyle: UIAlertControllerStyle.alert)
+        alertController.addAction(UIAlertAction(title: "New game", style: UIAlertActionStyle.default, handler: nil))
+        
+        self.present(alertController, animated: true, completion: nil)
+    }
+    
+    func youLoseAlert() {
+        let alertController = UIAlertController(title: "You lose!", message: "The correct phrase was " + phrase, preferredStyle: UIAlertControllerStyle.alert)
+        alertController.addAction(UIAlertAction(title: "New game", style: UIAlertActionStyle.default, handler: nil))
+        
+        self.present(alertController, animated: true, completion: nil)
+    }
+    @IBAction func newGameButtonWasPressed(_ sender: UIBarButtonItem) {
+        viewDidLoad()
     }
     
     @IBAction func letterButtonWasPressed(_ sender: UIButton) {
@@ -69,12 +120,30 @@ class HangmanViewController: UIViewController {
     }
 
     @IBAction func guessButtonWasPressed(_ sender: UIButton) {
-        if phrase.range(of:letter) != nil{
-            // display on screen
-            addCorrectLetter()
-            updateDisplayString()
-        } else {
-            addIncorrectLetter()
+        if letter != "" && !guessesSoFar.contains(letter) {
+            self.guessesSoFar.insert(letter)
+        
+            if phrase.range(of:letter) != nil && !allCorrectLettersGuessed() {
+                addCorrectLetter()
+                updateDisplayString()
+            } else if numIncorrectGuesses <= maxIncorrectGuesses {
+                numIncorrectGuesses += 1
+                addIncorrectLetter()
+                updateImage()
+            }
+            
+            if allCorrectLettersGuessed() {
+                // pop up you win box
+                youWinAlert()
+                viewDidLoad()
+            }
+            
+            if numIncorrectGuesses == maxIncorrectGuesses {
+                // pop up you lose box
+                updateImage()
+                youLoseAlert()
+                viewDidLoad()
+            }
         }
     }
     /*
