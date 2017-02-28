@@ -95,7 +95,7 @@ class HangmanViewController: UIViewController {
     }
     
     func youWinAlert() {
-        let alertController = UIAlertController(title: "You win!", message: "Congratulations!", preferredStyle: UIAlertControllerStyle.alert)
+        let alertController = UIAlertController(title: "You win!", message: "Congratulations! The phrase was " + phrase, preferredStyle: UIAlertControllerStyle.alert)
         alertController.addAction(UIAlertAction(title: "New game", style: UIAlertActionStyle.default, handler: nil))
         
         self.present(alertController, animated: true, completion: nil)
@@ -146,6 +146,7 @@ class HangmanViewController: UIViewController {
             }
         }
     }
+    
     /*
     // MARK: - Navigation
 
