@@ -16,6 +16,7 @@ class HangmanViewController: UIViewController {
     @IBOutlet weak var incorrectGuessesLabel: UILabel!
     
     var letter = ""
+    var currLetterButton : UIButton? = nil
     var phrase = ""
     var phraseLength = 0
     var numIncorrectGuesses = 0
@@ -57,7 +58,6 @@ class HangmanViewController: UIViewController {
             } else {
                 displayString += "-"
             }
-            
         }
         updateDisplayString()
     }
@@ -96,22 +96,32 @@ class HangmanViewController: UIViewController {
     
     func youWinAlert() {
         let alertController = UIAlertController(title: "You win!", message: "Congratulations! The phrase was " + phrase, preferredStyle: UIAlertControllerStyle.alert)
-        alertController.addAction(UIAlertAction(title: "New game", style: UIAlertActionStyle.default, handler: nil))
+        alertController.addAction(UIAlertAction(title: "New game", style: UIAlertActionStyle.default, handler: newGameActionHandler))
         
         self.present(alertController, animated: true, completion: nil)
     }
     
     func youLoseAlert() {
         let alertController = UIAlertController(title: "You lose!", message: "The correct phrase was " + phrase, preferredStyle: UIAlertControllerStyle.alert)
-        alertController.addAction(UIAlertAction(title: "New game", style: UIAlertActionStyle.default, handler: nil))
+        alertController.addAction(UIAlertAction(title: "New game", style: UIAlertActionStyle.default, handler: newGameActionHandler))
         
         self.present(alertController, animated: true, completion: nil)
     }
+    
+    func newGameActionHandler(alert: UIAlertAction!) {
+        viewDidLoad()
+    }
+    
     @IBAction func newGameButtonWasPressed(_ sender: UIBarButtonItem) {
         viewDidLoad()
     }
     
     @IBAction func letterButtonWasPressed(_ sender: UIButton) {
+        if let button = currLetterButton {
+            button.backgroundColor = UIColor.white
+        }
+        currLetterButton = sender
+        currLetterButton!.backgroundColor = UIColor.lightGray
         if let label = sender.titleLabel {
             if let text = label.text {
                 letter = text
@@ -120,6 +130,9 @@ class HangmanViewController: UIViewController {
     }
 
     @IBAction func guessButtonWasPressed(_ sender: UIButton) {
+        if let button = currLetterButton {
+            button.backgroundColor = UIColor.white
+        }
         if letter != "" && !guessesSoFar.contains(letter) {
             self.guessesSoFar.insert(letter)
         
@@ -135,14 +148,17 @@ class HangmanViewController: UIViewController {
             if allCorrectLettersGuessed() {
                 // pop up you win box
                 youWinAlert()
-                viewDidLoad()
             }
             
             if numIncorrectGuesses == maxIncorrectGuesses {
                 // pop up you lose box
                 updateImage()
                 youLoseAlert()
-                viewDidLoad()
+//                let when = DispatchTime.now() + 0.5
+//                DispatchQueue.main.asyncAfter(deadline: when) {
+//                    self.youLoseAlert()
+//                    self.viewDidLoad()
+//                }
             }
         }
     }
